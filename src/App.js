@@ -6,6 +6,7 @@ function App() {
     <div className="App">
     {/* Chess board component */}
     {/* new comment */}
+    {/* another comment */}
         <Chessboard />
     </div>
   );
