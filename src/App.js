@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
+    {/* Chess board component */}
         <Chessboard />
     </div>
   );
