@@ -33,10 +33,10 @@ function Chessboard() {
             let y=e.clientY -45;
             activePiece.style.position ="absolute";
 
-            // if(x<minX) x=minX;
-            // else if(x > maxX) x=maxX;
-            // if(y<minY) y=minY;
-            // else if(y > minY) y=maxY;
+            if(x<minX) x=minX;
+            else if(x > maxX) x=maxX;
+            if(y<minY) y=minY;
+            else if(y > minY) y=maxY;
 
             activePiece.style.left=`${x}px`;
             activePiece.style.top=`${y}px`;
