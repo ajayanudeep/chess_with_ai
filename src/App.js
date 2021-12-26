@@ -5,6 +5,7 @@ function App() {
   return (
     <div className="App">
     {/* Chess board component */}
+    {/* new comment */}
         <Chessboard />
     </div>
   );
