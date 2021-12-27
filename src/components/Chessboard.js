@@ -1,86 +1,104 @@
 import React from 'react'
 import Tile from './Tile';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 const verticalAxis=["1","2","3","4","5","6","7","8"];
 const horizantalAxis=["a","b","c","d","e","f","g","h"];
+const initialBoardState = [];
+
 function Chessboard() {
     const chessboardRef= useRef(null);
-    let activePiece=null;
+    const [activePiece, setActivePiece] = useState(null);
+    const [pieces, setPieces] = useState(initialBoardState)
+    const [gridX, setGridX] = useState(0);
+    const [gridY, setGridY] = useState(0);
+
     const grabPiece = (e) =>{
+        const chess_board = chessboardRef.current;
         const element=e.target;
-        console.log(element)
-        if(element.classList.contains("coin")){
+
+        if(element.classList.contains("coin") &&  chess_board){            
             console.log(e.target)
             const x=e.clientX -45;
             const y=e.clientY -45;
             element.style.position ="absolute";
-            console.log(x)
-            console.log(y)
             element.style.left=`${x}px`;
             element.style.top=`${y}px`;
-            activePiece=element;
-        }
+            setActivePiece(element);
+            setGridX(Math.floor((e.clientX - chess_board.offsetLeft +40)/100));
+            setGridY(Math.abs((Math.floor((e.clientY - chess_board.offsetTop +40)/100))-7));
+        }   
     }
+
+        
     const movePiece = (e) =>{
         const chess_board = chessboardRef.current;
         if(activePiece && chess_board){
-            const minX = parseInt(chess_board.offsetLeft) -25;
-            const minY = parseInt(chess_board.offsetTop) -25 ;
-            const maxX = parseInt(chess_board.offsetRight) -25;
-            const maxY = parseInt(chess_board.offsetBottom) -25;
-            let x= e.clientX -45;
-            let y=e.clientY -45;
+            const minX = chess_board.offsetLeft -25;        //Left most position of board
+            const minY = chess_board.offsetTop  -25;        //Top most position of board
+            const maxX = chess_board.offsetLeft + chess_board.clientWidth-70;       //Right most position of board
+            const maxY = chess_board.offsetTop+chess_board.clientHeight-70;         //Bottom most position of board
+            const x= e.clientX -45;
+            const y=e.clientY -45;
             activePiece.style.position ="absolute";
 
-            if(x<minX) x=minX;
-            else if(x > maxX) x=maxX;
-            if(y<minY) y=minY;
-            else if(y > minY) y=maxY;
+            if( x < minX) activePiece.style.left=`${minX}px`;
+            else if(x > maxX) activePiece.style.left=`${maxX}px`;
+            else activePiece.style.left=`${x}px`
 
-            activePiece.style.left=`${x}px`;
-            activePiece.style.top=`${y}px`;
-        }
-        
+            if(y < minY) activePiece.style.top=`${minY}px`;
+            else if(y > maxY) activePiece.style.top=`${maxY}px`;
+            else activePiece.style.top=`${y}px`;
+        }  
     }
 
     const dropPiece =(e) =>{
-        if(activePiece){
+        const chess_board = chessboardRef.current;
+        if(activePiece && chess_board){
+            const x = Math.floor((e.clientX - chess_board.offsetLeft +40)/100);
+            const y = Math.abs((Math.floor((e.clientY - chess_board.offsetTop +40)/100))-7);
             
-            const x=e.clientX -45;
-            const y=e.clientY -45;
-            activePiece.style.position ="absolute";
-            activePiece.style.left=`${x}px`;
-            activePiece.style.top=`${y}px`;
-            activePiece=null;
+            setPieces((value) =>{
+                const pieces =value.map(p =>{
+                    if(p.x === gridX && p.y === gridY ){
+                        p.x = x;
+                        p.y = y;
+                    }
+                    return p;
+                })
+                return pieces;
+            })
+
+            setActivePiece(null);
         }
     }
 
-    let board=[],pieces=[];
+    let board=[];
 
     for (let index = 0; index < horizantalAxis.length; index++) {
-        pieces.push({image:'icons/pawn_w.png', x:index ,y:1} )
+        initialBoardState.push({image:'icons/pawn_w.png', x:index ,y:1} )
     }
     for (let index = 0; index < horizantalAxis.length; index++) {
-        pieces.push({image:'icons/pawn_b.png', x:index ,y:6 } )
+        initialBoardState.push({image:'icons/pawn_b.png', x:index ,y:6 } )
     }
 
     for(let p=0;p<2;p++){
         const type = (p===0)?"w":"b";
         const y = (p===0) ? 0:7;
-        pieces.push({image:`icons/rook_${type}.png`, x:0 , y:y })
-        pieces.push({image:`icons/rook_${type}.png`, x:7 , y:y })
-        pieces.push({image:`icons/bishop_${type}.png`, x:5 , y:y })
-        pieces.push({image:`icons/bishop_${type}.png`, x:2 , y:y })
-        pieces.push({image:`icons/knight_${type}.png`, x:1 , y:y })
-        pieces.push({image:`icons/knight_${type}.png`, x:6 , y:y })
-        pieces.push({image:`icons/king_${type}.png`, x:4 , y:y })
-        pieces.push({image:`icons/queen_${type}.png`, x:3 , y:y })
+        initialBoardState.push({image:`icons/rook_${type}.png`, x:0 , y:y })
+        initialBoardState.push({image:`icons/rook_${type}.png`, x:7 , y:y })
+        initialBoardState.push({image:`icons/bishop_${type}.png`, x:5 , y:y })
+        initialBoardState.push({image:`icons/bishop_${type}.png`, x:2 , y:y })
+        initialBoardState.push({image:`icons/knight_${type}.png`, x:1 , y:y })
+        initialBoardState.push({image:`icons/knight_${type}.png`, x:6 , y:y })
+        initialBoardState.push({image:`icons/king_${type}.png`, x:4 , y:y })
+        initialBoardState.push({image:`icons/queen_${type}.png`, x:3 , y:y })
     }  
+    
 
     for(let j=verticalAxis.length-1;j>=0;j--){
         for(let i=0;i<horizantalAxis.length;i++){
-            let image
+            let image;
             pieces.forEach((p) => {
                 if(p.x === i && p.y === j){
                     image=p.image;

@@ -1,6 +1,4 @@
 .cb{
-  /* display: flex;
-  flex-wrap: wrap; */
   display: grid;
   grid-template-columns: repeat(8,90px);
   grid-template-rows: repeat(8,90px);
@@ -32,12 +30,7 @@
   background-color: #ebecb0;
 }
 
-/* .tile_white img{
-  width: 125%;
-}
-.tile_black img{
-  width: 125%;
-} */
+
 body{
   background-color: black;
 }
@@ -45,7 +38,6 @@ body{
 .tile .coin{
   height:90px;
   width: 90px;
-  /* position: absolute; */
   background-repeat: no-repeat;
   background-position: center;
 }
