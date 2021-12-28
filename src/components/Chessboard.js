@@ -47,6 +47,8 @@ function Chessboard() {
             element.style.left=`${x}px`;
             element.style.top=`${y}px`;
             setActivePiece(element);
+            
+            //setting location of a piece when clicked
             setGridX(Math.floor((e.clientX - chess_board.offsetLeft +40)/100));
             setGridY(Math.abs((Math.floor((e.clientY - chess_board.offsetTop +40)/100))-7));
         }   
@@ -63,6 +65,7 @@ function Chessboard() {
             const y=e.clientY -45;
             activePiece.style.position ="absolute";
 
+            //Assigning left, top, right and bottom values 
             if( x < minX) activePiece.style.left=`${minX}px`;
             else if(x > maxX) activePiece.style.left=`${maxX}px`;
             else activePiece.style.left=`${x}px`
@@ -76,38 +79,45 @@ function Chessboard() {
     const dropPiece =(e) =>{
         const chess_board = chessboardRef.current;
         if(activePiece && chess_board){
+            //New location for the pieces
             const x = Math.floor((e.clientX - chess_board.offsetLeft +40)/100);
             const y = Math.abs((Math.floor((e.clientY - chess_board.offsetTop +40)/100))-7);
-            setPieces(pieces);
-            setPieces((value) =>{
-                const piece =value.map(p =>{
-                    if(p.x === gridX && p.y === gridY ){
-                        const valid = refree.isValidMove(gridX,gridY,x,y,p.type,p.team,value);
-                        
-                        if(valid){
-                            p.x = x;
-                            p.y = y;
-                        }
-                        else{
-                            activePiece.style.position='relative';
-                            activePiece.style.removeProperty('top');
-                            activePiece.style.removeProperty('left');
-                        }
-                    }
-                    
-                    return p;
-                })
-                // console.log(piece.team);
-                return piece;
-            })
 
+            const currentPiece = pieces.find(p => p.x === gridX && p.y === gridY);
+            const attackedPiece = pieces.find(p => p.x === x && p.y === y);
+            
+            if(currentPiece){
+                const valid = refree.isValidMove(gridX, gridY, x, y, currentPiece.type, currentPiece.team, pieces);
+                //Updating location
+                if(valid){
+                    const updatedPieces = pieces.reduce((results, piece) =>{
+                        //Changing the position of Active piece and pushing to results
+                        if(piece.x === gridX  && piece.y === gridY){
+                            piece.x = x;
+                            piece.y = y;
+                            results.push(piece);
+                        }
+                        //pushing every piece except current and attacked piece
+                        else if(!(piece.x === x && piece.y === y)){
+                            results.push(piece);
+                        }
+                        return results;  
+                    },[]);
+                    setPieces(updatedPieces);
+                }
+                //Getting back to original location
+                else{
+                    activePiece.style.position='relative';
+                    activePiece.style.removeProperty('top');
+                    activePiece.style.removeProperty('left');
+                }
+            }
             setActivePiece(null);
         }
     }
 
     let board=[];
 
-    // console.log(pieces)
     for(let j=verticalAxis.length-1;j>=0;j--){
         for(let i=0;i<horizantalAxis.length;i++){
             let image;

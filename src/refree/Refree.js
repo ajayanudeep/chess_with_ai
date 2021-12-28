@@ -8,12 +8,21 @@ export default class Refree {
             return false;
         }
     };
+    tileIsOccupiedByOpponent(x, y, boardState,team){
+        const piece = boardState.find((p) => p.x === x && p.y === y)
+        if(piece.team === team){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
     isValidMove(px,py,x,y,type,team,boardState){
         console.log(type, px, py, x, y,team);
         if(type === "PAWN"){
             const specialRow = (team === "w") ? 1: 6;
             const pawnDirection = (team === "w")? 1: -1;
-
+            //Pawn Movement
             if(px === x && py === specialRow && y-py === 2*pawnDirection){
                 if(!this.tileIsOccupied(x,y,boardState) && !this.tileIsOccupied(x,y-pawnDirection,boardState))
                     return true;
@@ -22,9 +31,25 @@ export default class Refree {
                 if(!this.tileIsOccupied(x,y,boardState))
                     return true;
             }
+            //Attacking
+            else if(x-px === 1 && y-py === pawnDirection){
+                //Upper / Bottom Right corner
+                if(this.tileIsOccupied(x,y,boardState))
+                if(this.tileIsOccupiedByOpponent(x,y,boardState,team)){
+                    return true;
+                }
+            }
+            else if(x-px === -1 && y-py === pawnDirection){
+                //Upper / Bottom Left corner
+                if(this.tileIsOccupied(x,y,boardState))
+                if(this.tileIsOccupiedByOpponent(x,y,boardState,team)){
+                    return true;
+                }
+            }
             else {
                 return false;
             }
         }
+        return false;
     }
 }
