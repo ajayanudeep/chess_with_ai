@@ -1,34 +1,29 @@
 export default class Refree {
-    isValidMove(px,py,x,y,type,team){
+    tileIsOccupied(x, y, boardState){
+        const piece = boardState.find((p) => p.x === x && p.y === y)
+        if(piece){
+            return true;
+        }
+        else{
+            return false;
+        }
+    };
+    isValidMove(px,py,x,y,type,team,boardState){
         console.log(type, px, py, x, y,team);
         if(type === "PAWN"){
-            if(team === 'w'){
-                if(py === 1  && Math.abs(px-x) === 0 && y-py<=2 && y-py >0){
+            const specialRow = (team === "w") ? 1: 6;
+            const pawnDirection = (team === "w")? 1: -1;
+
+            if(px === x && py === specialRow && y-py === 2*pawnDirection){
+                if(!this.tileIsOccupied(x,y,boardState) && !this.tileIsOccupied(x,y-pawnDirection,boardState))
                     return true;
-                }
-                else if(Math.abs(px-x) === 0 && y-py<2 && y-py >0){
-                    return true;
-                }
-                // else if(Math.abs(px-x) === 1 && Math.abs(py-y) === 1 ){
-                //     return true;
-                // }
-                else{
-                    return false;
-                }
             }
-            if(team === 'b'){
-                if(py === 6  && Math.abs(px-x) === 0 && py-y<=2 && py-y>0){
+            else if(px === x && y-py === pawnDirection){
+                if(!this.tileIsOccupied(x,y,boardState))
                     return true;
-                }
-                else if(Math.abs(px-x) === 0 && py-y<2 && py-y>0){
-                    return true;
-                }
-                // else if(Math.abs(px-x) === 1 && Math.abs(py-y) === 1 ){
-                //     return true;
-                // }
-                else{
-                    return false;
-                }
+            }
+            else {
+                return false;
             }
         }
     }

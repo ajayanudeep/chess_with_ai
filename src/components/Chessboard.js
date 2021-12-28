@@ -7,6 +7,26 @@ const verticalAxis=["1","2","3","4","5","6","7","8"];
 const horizantalAxis=["a","b","c","d","e","f","g","h"];
 const initialBoardState = [];
 
+for (let index = 0; index < horizantalAxis.length; index++) {
+    initialBoardState.push({image:'icons/pawn_w.png', x:index ,y:1, type:"PAWN",team:"w"} )
+}
+for (let index = 0; index < horizantalAxis.length; index++) {
+    initialBoardState.push({image:'icons/pawn_b.png', x:index ,y:6, type:"PAWN", team:"b" } )
+}
+
+for(let p=0;p<2;p++){
+    const type = (p===0)?"w":"b";
+    const y = (p===0) ? 0:7;
+    initialBoardState.push({image:`icons/rook_${type}.png`, x:0 , y:y, type:"ROOK", team:`${type}` })
+    initialBoardState.push({image:`icons/rook_${type}.png`, x:7 , y:y, type:"ROOK", team:`${type}` })
+    initialBoardState.push({image:`icons/bishop_${type}.png`, x:5 , y:y, type:"BISHOP", team:`${type}` })
+    initialBoardState.push({image:`icons/bishop_${type}.png`, x:2 , y:y, type:"BISHOP", team:`${type}` })
+    initialBoardState.push({image:`icons/knight_${type}.png`, x:1 , y:y, type:"KNIGHT", team:`${type}` })
+    initialBoardState.push({image:`icons/knight_${type}.png`, x:6 , y:y, type:"KNIGHT", team:`${type}` })
+    initialBoardState.push({image:`icons/king_${type}.png`, x:4 , y:y, type:"KING",team:`${type}` })
+    initialBoardState.push({image:`icons/queen_${type}.png`, x:3 , y:y, type:"QUEEN",team:`${type}` })
+} 
+
 function Chessboard() {
     const chessboardRef= useRef(null);
     const [activePiece, setActivePiece] = useState(null);
@@ -14,13 +34,13 @@ function Chessboard() {
     const [gridX, setGridX] = useState(0);
     const [gridY, setGridY] = useState(0);
     const refree = new Refree();
-
+    
     const grabPiece = (e) =>{
         const chess_board = chessboardRef.current;
         const element=e.target;
 
         if(element.classList.contains("coin") &&  chess_board){            
-            console.log(e.target)
+            
             const x=e.clientX -45;
             const y=e.clientY -45;
             element.style.position ="absolute";
@@ -32,7 +52,6 @@ function Chessboard() {
         }   
     }
 
-        
     const movePiece = (e) =>{
         const chess_board = chessboardRef.current;
         if(activePiece && chess_board){
@@ -59,13 +78,13 @@ function Chessboard() {
         if(activePiece && chess_board){
             const x = Math.floor((e.clientX - chess_board.offsetLeft +40)/100);
             const y = Math.abs((Math.floor((e.clientY - chess_board.offsetTop +40)/100))-7);
-            
+            setPieces(pieces);
             setPieces((value) =>{
-                const pieces =value.map(p =>{
+                const piece =value.map(p =>{
                     if(p.x === gridX && p.y === gridY ){
-                        const value=refree.isValidMove(gridX,gridY,x,y,p.type,p.team);
+                        const valid = refree.isValidMove(gridX,gridY,x,y,p.type,p.team,value);
                         
-                        if(value){
+                        if(valid){
                             p.x = x;
                             p.y = y;
                         }
@@ -78,7 +97,8 @@ function Chessboard() {
                     
                     return p;
                 })
-                return pieces;
+                // console.log(piece.team);
+                return piece;
             })
 
             setActivePiece(null);
@@ -87,27 +107,7 @@ function Chessboard() {
 
     let board=[];
 
-    for (let index = 0; index < horizantalAxis.length; index++) {
-        initialBoardState.push({image:'icons/pawn_w.png', x:index ,y:1, type:"PAWN",team:"w"} )
-    }
-    for (let index = 0; index < horizantalAxis.length; index++) {
-        initialBoardState.push({image:'icons/pawn_b.png', x:index ,y:6, type:"PAWN", team:"b" } )
-    }
-
-    for(let p=0;p<2;p++){
-        const type = (p===0)?"w":"b";
-        const y = (p===0) ? 0:7;
-        initialBoardState.push({image:`icons/rook_${type}.png`, x:0 , y:y, type:"ROOK", team:`${type}` })
-        initialBoardState.push({image:`icons/rook_${type}.png`, x:7 , y:y, type:"ROOK", team:`${type}` })
-        initialBoardState.push({image:`icons/bishop_${type}.png`, x:5 , y:y, type:"BISHOP", team:`${type}` })
-        initialBoardState.push({image:`icons/bishop_${type}.png`, x:2 , y:y, type:"BISHOP", team:`${type}` })
-        initialBoardState.push({image:`icons/knight_${type}.png`, x:1 , y:y, type:"KNIGHT", team:`${type}` })
-        initialBoardState.push({image:`icons/knight_${type}.png`, x:6 , y:y, type:"KNIGHT", team:`${type}` })
-        initialBoardState.push({image:`icons/king_${type}.png`, x:4 , y:y, type:"KING",team:`${type}` })
-        initialBoardState.push({image:`icons/queen_${type}.png`, x:3 , y:y, type:"QUEEN",team:`${type}` })
-    }  
-    
-
+    // console.log(pieces)
     for(let j=verticalAxis.length-1;j>=0;j--){
         for(let i=0;i<horizantalAxis.length;i++){
             let image;
