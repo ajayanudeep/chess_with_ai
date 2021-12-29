@@ -10,11 +10,16 @@ export default class Refree {
     };
     tileIsOccupiedByOpponent(x, y, boardState,team){
         const piece = boardState.find((p) => p.x === x && p.y === y)
-        if(piece.team === team){
-            return false;
+        if(piece){
+            if(piece.team === team){
+                return false;
+            }
+            else{
+                return true;
+            }
         }
         else{
-            return true;
+            return false;
         }
     };
     isEnPassentMove(px, py, x, y, boardState, type, team){
@@ -64,11 +69,84 @@ export default class Refree {
         }
         else if(type === "KNIGHT"){
             if((y === py+2 || y === py-2) && (x === px+1 || x === px-1)){
+                if(this.tileIsOccupied(x,y,boardState)){
+                    if((this.tileIsOccupiedByOpponent(x,y,boardState,team))){
+                        return true;
+                    }
+                    return false;
+                }   
                 return true;
             }
             else if((x === px+2 || x === px -2) && (y === py+1 || y === py-1)){
+                if(this.tileIsOccupied(x,y,boardState)){
+                    if((this.tileIsOccupiedByOpponent(x,y,boardState,team))){
+                        return true;
+                    }
+                    return false;
+                }
                 return true;
             }
+        }
+        else if(type === "BISHOP"){
+            let val = true;
+            if( px === x || py === y){
+                val = false;
+            }
+            if(x > px){
+                if(y > py){
+                    for (let i = 1; i <= x-px; i++) {
+                        if(this.tileIsOccupied(px+i,py+i,boardState)){
+                            if(this.tileIsOccupiedByOpponent(x,y,boardState,"w")){
+                                val = true;
+                            }
+                            else{
+                                val = false;
+                            }
+                                
+                        }
+                    }
+                }
+                else if(y < py){
+                    for (let i = 1; i <= x-px; i++) {
+                        if(this.tileIsOccupied(px+i,py-i,boardState)){
+                            if(this.tileIsOccupiedByOpponent(x,y,boardState,"w")){
+                                val = true;
+                            }
+                            else{
+                                val = false;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (x <px){
+                if(y > py){
+                    for (let i = 1; i <= px -x; i++) {
+                        if(this.tileIsOccupied(px-i,py+i,boardState)){
+                            if(this.tileIsOccupiedByOpponent(x,y,boardState,"w")){
+                                val = true;
+                            }
+                            else{
+                                val = false;
+                            }
+                                
+                        }
+                    }
+                }
+                else if(y < py){
+                    for (let i = 1; i <= px-x; i++) {
+                        if(this.tileIsOccupied(px-i,py-i,boardState)){
+                            if(this.tileIsOccupiedByOpponent(x,y,boardState,"w")){
+                                val = true;
+                            }
+                            else{
+                                val = false;
+                            }
+                        }
+                    }
+                }
+            }
+            return val;
         }
         return false;
     }
