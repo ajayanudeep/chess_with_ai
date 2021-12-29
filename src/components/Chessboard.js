@@ -89,18 +89,52 @@ function Chessboard() {
             if(currentPiece){
                 const valid = refree.isValidMove(gridX, gridY, x, y, currentPiece.type, currentPiece.team, pieces);
                 //Updating location
-                if(valid){
+                const isEnPassent = refree.isEnPassentMove(gridX,gridY,x,y,pieces,currentPiece.type,currentPiece.team);
+                const pawnDirection = currentPiece.team === "w"? 1 : -1;
+                //Making EnPassent move
+                if(isEnPassent){
+                    const updatedPieces = pieces.reduce((results, piece) =>{
+                        if(piece.x === gridX  && piece.y === gridY){
+                            piece.enPassant = false;
+                            piece.x = x;
+                            piece.y = y;
+                            results.push(piece);
+                        }
+                        else if(!(piece.x === x && piece.y === y - pawnDirection)){
+                            if(piece.type === "PAWN"){
+                                piece.enPassant = false;
+                            }
+                            results.push(piece);
+                        }
+                        return results;
+                    },[]);
+                    setPieces(updatedPieces);
+                }
+                else if(valid){
                     const updatedPieces = pieces.reduce((results, piece) =>{
                         //Changing the position of Active piece and pushing to results
                         if(piece.x === gridX  && piece.y === gridY){
+                            if(Math.abs(gridY - y) === 2 && piece.type === "PAWN"){
+                                piece.enPassant = true;
+                                pieces.forEach(p => {if(p !== piece) p.enPassant=false});
+                            }
+                            else{
+                                piece.enPassant = false;
+                                pieces.forEach(p => {if(p !== piece) p.enPassant=false});
+                            }
                             piece.x = x;
                             piece.y = y;
                             results.push(piece);
                         }
                         //pushing every piece except current and attacked piece
                         else if(!(piece.x === x && piece.y === y)){
+                            if(piece.type === "PAWN "){
+                                piece.enPassant = false;
+                                pieces.forEach(p => {if(p !== piece) p.enPassant=false});
+                            }
                             results.push(piece);
                         }
+                        
                         return results;  
                     },[]);
                     setPieces(updatedPieces);

@@ -16,6 +16,18 @@ export default class Refree {
         else{
             return true;
         }
+    };
+    isEnPassentMove(px, py, x, y, boardState, type, team){
+        const pawnDirection = team === "w" ? 1 : -1;
+        if(type === "PAWN"){
+            if((x-px === 1 || x-px === -1) && y-py === pawnDirection){
+                const piece = boardState.find(p => p.x === x && p.y === y - pawnDirection && p.enPassant)
+                if(piece)
+                    return true;
+            }
+
+        }
+        return false;
     }
     isValidMove(px,py,x,y,type,team,boardState){
         console.log(type, px, py, x, y,team);
