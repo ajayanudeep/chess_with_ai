@@ -62,6 +62,14 @@ export default class Refree {
                 return false;
             }
         }
+        else if(type === "KNIGHT"){
+            if((y === py+2 || y === py-2) && (x === px+1 || x === px-1)){
+                return true;
+            }
+            else if((x === px+2 || x === px -2) && (y === py+1 || y === py-1)){
+                return true;
+            }
+        }
         return false;
     }
 }
