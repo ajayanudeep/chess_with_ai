@@ -94,57 +94,91 @@ export default class Refree {
             }
             if(x > px){
                 if(y > py){
-                    for (let i = 1; i <= x-px; i++) {
+                    for (let i = 1; i < x-px; i++) {
                         if(this.tileIsOccupied(px+i,py+i,boardState)){
-                            if(this.tileIsOccupiedByOpponent(x,y,boardState,"w")){
-                                val = true;
-                            }
-                            else{
-                                val = false;
-                            }
-                                
+                            val = false;
                         }
+                    }
+                    if(this.tileIsOccupiedByOpponent(x,y,boardState,team) && val === true){
+                        val = true;
+                    }
+                    else{
+                        val = false;
                     }
                 }
                 else if(y < py){
-                    for (let i = 1; i <= x-px; i++) {
+                    for (let i = 1; i < x-px; i++) {
                         if(this.tileIsOccupied(px+i,py-i,boardState)){
-                            if(this.tileIsOccupiedByOpponent(x,y,boardState,"w")){
-                                val = true;
-                            }
-                            else{
-                                val = false;
-                            }
+                            val = false;
                         }
+                    }
+                    if(this.tileIsOccupiedByOpponent(x,y,boardState,team) && val === true){
+                        val = true;
+                    }
+                    else{
+                        val = false;
                     }
                 }
             }
             else if (x <px){
                 if(y > py){
-                    for (let i = 1; i <= px -x; i++) {
+                    for (let i = 1; i < px -x; i++) {
                         if(this.tileIsOccupied(px-i,py+i,boardState)){
-                            if(this.tileIsOccupiedByOpponent(x,y,boardState,"w")){
-                                val = true;
-                            }
-                            else{
-                                val = false;
-                            }
-                                
+                            val = false;      
                         }
+                    }
+                    if(this.tileIsOccupiedByOpponent(x,y,boardState,team) && val === true){
+                        val = true;
+                    }
+                    else{
+                        val = false;
                     }
                 }
                 else if(y < py){
-                    for (let i = 1; i <= px-x; i++) {
+                    for (let i = 1; i <px-x; i++) {
                         if(this.tileIsOccupied(px-i,py-i,boardState)){
-                            if(this.tileIsOccupiedByOpponent(x,y,boardState,"w")){
-                                val = true;
-                            }
-                            else{
-                                val = false;
-                            }
+                            val = false;
                         }
                     }
+                    if(this.tileIsOccupiedByOpponent(x,y,boardState,team) && val === true){
+                        val = true;
+                    }
+                    else{
+                        val = false;
+                    }
                 }
+            }
+            return val;
+        }
+        else if(type === "ROOK"){
+            let val = true;
+            if ( px === x ){
+                for(let i = 1; i < Math.abs(y-py); i++){
+                    if(this.tileIsOccupied(px , (py+ (i* ((y-py)/Math.abs(y-py)))),boardState)){
+                        val = false;
+                    }
+                }
+                if(this.tileIsOccupiedByOpponent(x,y,boardState,team) && val === true){
+                    val = true;
+                }
+                else{
+                    val = false;                }
+            }
+            else if( py === y){
+                for(let i = 1; i < Math.abs(x-px); i++){
+                    if(this.tileIsOccupied(px + (i* ((x-px)/Math.abs(x-px))) , py,boardState)){
+                        val = false;
+                    }
+                }
+                if(this.tileIsOccupiedByOpponent(x,y,boardState,team) && val === true){
+                    val = true;
+                }
+                else{
+                    val = false;
+                }
+            }
+            else{
+                val =false;
             }
             return val;
         }
