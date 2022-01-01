@@ -1,6 +1,7 @@
 import React from 'react'
 import Tile from './Tile';
 import { useRef, useState } from 'react';
+import AI from '../ai'
 import Refree from '../refree/Refree';
 
 const verticalAxis=["1","2","3","4","5","6","7","8"];
@@ -166,6 +167,12 @@ function Chessboard() {
                 )
         }
     }
+    const g=new AI();
+    console.log(pieces[5][5])
+    console.log(g.alphabeta(pieces))
+    pieces.forEach(element => {
+        console.log(element.x);        
+    });
     return (
         <div 
             onMouseMove={e => movePiece(e)}
@@ -178,4 +185,7 @@ function Chessboard() {
     )
 }
 
+
+
 export default Chessboard
+
