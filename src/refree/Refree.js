@@ -95,7 +95,7 @@ export default class Refree {
             if( px === x || py === y){
                 valid = false;
             }
-            if(x > px){
+            if(x > px && (Math.abs(x-px) === Math.abs(y-py))){
                 if(y > py){
                     for (let i = 1; i < x-px; i++) {
                         if(this.tileIsOccupied(px+i,py+i,boardState)){
@@ -112,7 +112,7 @@ export default class Refree {
                         valid = false;
                     }
                 }
-                else if(y < py){
+                else if(y < py && (Math.abs(x-px) === Math.abs(y-py))){
                     for (let i = 1; i < x-px; i++) {
                         if(this.tileIsOccupied(px+i,py-i,boardState)){
                             valid = false;
@@ -129,7 +129,7 @@ export default class Refree {
                     }
                 }
             }
-            else if (x <px){
+            else if (x <px && (Math.abs(x-px) === Math.abs(y-py))){
                 if(y > py){
                     for (let i = 1; i < px -x; i++) {
                         if(this.tileIsOccupied(px-i,py+i,boardState)){
@@ -146,7 +146,7 @@ export default class Refree {
                         valid = false;
                     }
                 }
-                else if(y < py){
+                else if(y < py && (Math.abs(x-px) === Math.abs(y-py))){
                     for (let i = 1; i <px-x; i++) {
                         if(this.tileIsOccupied(px-i,py-i,boardState)){
                             valid = false;
@@ -161,7 +161,10 @@ export default class Refree {
                     else{
                         valid = false;
                     }
-                }
+                }  
+            }
+            else{
+                valid = false;
             }
             return valid;
         }
@@ -246,7 +249,7 @@ export default class Refree {
                     valid = false;
                 }
             }
-            else if(x > px){
+            else if(x > px && (Math.abs(x-px) === Math.abs(y-py))){
                 if(y > py){
                     for (let i = 1; i < x-px; i++) {
                         if(this.tileIsOccupied(px+i,py+i,boardState)){
@@ -280,7 +283,7 @@ export default class Refree {
                     }
                 }
             }
-            else if (x <px){
+            else if (x < px && (Math.abs(x-px) === Math.abs(y-py))){
                 if(y > py){
                     for (let i = 1; i < px -x; i++) {
                         if(this.tileIsOccupied(px-i,py+i,boardState)){
