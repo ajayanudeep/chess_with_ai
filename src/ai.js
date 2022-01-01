@@ -252,17 +252,23 @@ function get_possible_moves(color){
     }
     return moves;
 };
+function is_invalid_move(move,invalid_moves) {
+    for (const invalid_move in invalid_moves) {
+        
+    }
+}
 const infinity=100000000;
 class AI{
-    get_ai_move(pieces){
+    get_ai_move(pieces,invalid_moves){
         var best_move=0;
         var best_score=infinity;
-
-    }
-    alphabeta(){
-        
-        
-    }
+        for (const move in get_possible_moves("b")) {
+                if(is_invalid_move(move,invalid_moves)){
+                    continue;
+                }
+                
+            }
+        }
 }
 
 export default AI
