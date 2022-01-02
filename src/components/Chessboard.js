@@ -14,7 +14,7 @@ for (let index = 0; index < horizantalAxis.length; index++) {
 for (let index = 0; index < horizantalAxis.length; index++) {
     initialBoardState.push({image:'icons/pawn_b.png', x:index ,y:6, type:"PAWN", team:"b" } )
 }
-
+console.log()
 for(let p=0;p<2;p++){
     const type = (p===0)?"w":"b";
     const y = (p===0) ? 0:7;
@@ -167,12 +167,7 @@ function Chessboard() {
                 )
         }
     }
-    const g=new AI();
-    console.log(pieces[5][5])
-    console.log(g.alphabeta(pieces))
-    pieces.forEach(element => {
-        console.log(element.x);        
-    });
+    
     return (
         <div 
             onMouseMove={e => movePiece(e)}
