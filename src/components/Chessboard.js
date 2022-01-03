@@ -27,7 +27,7 @@ for(let p=0;p<2;p++){
     initialBoardState.push({image:`icons/king_${type}.png`, x:4 , y:y, type:"KING",team:`${type}` })
     initialBoardState.push({image:`icons/queen_${type}.png`, x:3 , y:y, type:"QUEEN",team:`${type}` })
 } 
-
+console.log(Chessboard.pieces);
 function Chessboard() {
     const chessboardRef= useRef(null);
     const [activePiece, setActivePiece] = useState(null);
@@ -39,7 +39,7 @@ function Chessboard() {
     const grabPiece = (e) =>{
         const chess_board = chessboardRef.current;
         const element=e.target;
-
+        
         if(element.classList.contains("coin") &&  chess_board){            
             
             const x=e.clientX -45;
@@ -54,7 +54,7 @@ function Chessboard() {
             setGridY(Math.abs((Math.floor((e.clientY - chess_board.offsetTop +40)/100))-7));
         }   
     }
-
+    
     const movePiece = (e) =>{
         const chess_board = chessboardRef.current;
         if(activePiece && chess_board){
@@ -65,25 +65,25 @@ function Chessboard() {
             const x= e.clientX -45;
             const y=e.clientY -45;
             activePiece.style.position ="absolute";
-
+            
             //Assigning left, top, right and bottom values 
             if( x < minX) activePiece.style.left=`${minX}px`;
             else if(x > maxX) activePiece.style.left=`${maxX}px`;
             else activePiece.style.left=`${x}px`
-
+            
             if(y < minY) activePiece.style.top=`${minY}px`;
             else if(y > maxY) activePiece.style.top=`${maxY}px`;
             else activePiece.style.top=`${y}px`;
         }  
     }
-
+    
     const dropPiece =(e) =>{
         const chess_board = chessboardRef.current;
         if(activePiece && chess_board){
             //New location for the pieces
             const x = Math.floor((e.clientX - chess_board.offsetLeft +40)/100);
             const y = Math.abs((Math.floor((e.clientY - chess_board.offsetTop +40)/100))-7);
-
+            
             const currentPiece = pieces.find(p => p.x === gridX && p.y === gridY);
             const attackedPiece = pieces.find(p => p.x === x && p.y === y);
             
@@ -150,9 +150,9 @@ function Chessboard() {
             setActivePiece(null);
         }
     }
-
+    
     let board=[];
-
+    
     for(let j=verticalAxis.length-1;j>=0;j--){
         for(let i=0;i<horizantalAxis.length;i++){
             let image;
@@ -161,15 +161,21 @@ function Chessboard() {
                     image=p.image;
                 }
             });
-
+            
             board.push(
                 <Tile key={`${i},${j}`} val={i+j} image={image}></Tile>
                 )
+            }
         }
-    }
-    
-    return (
-        <div 
+        
+        // var pi={image:"icons/rook_w.png", x:0 , y:0, type:"ROOK", team:"w" };
+        // Chessboard.pieces.forEach(p => {
+            //     if(p)
+            //         console.log(p);
+            // });
+            // console.log(Chessboard.pieces);
+            return (
+                <div 
             onMouseMove={e => movePiece(e)}
             onMouseDown={e =>grabPiece(e)} 
             onMouseUp={e =>dropPiece(e)} 
