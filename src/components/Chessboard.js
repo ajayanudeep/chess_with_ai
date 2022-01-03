@@ -35,6 +35,7 @@ function Chessboard() {
     const [gridX, setGridX] = useState(0);
     const [gridY, setGridY] = useState(0);
     const [pawnPromotionState, setPawnPromotionState] = useState(false);
+    const [promotionPawn, setPromotionPawn] = useState();
     const refree = new Refree();
     
     const grabPiece = (e) =>{
@@ -128,8 +129,9 @@ function Chessboard() {
                             piece.y = y;
                             
                             const promoteRow = (piece.team === "w") ? 7 : 0;
-                            if(y === promoteRow){
+                            if(y === promoteRow && piece.type === "PAWN"){
                                 setPawnPromotionState(true);
+                                setPromotionPawn(piece);
                             }
                             results.push(piece);
                         }
@@ -156,8 +158,21 @@ function Chessboard() {
         }
     }
     
-    const pawnPromotion = () =>{
-        // console.log("Promoting")
+    const pawnPromotion = (type) =>{
+        if(promotionPawn === undefined){
+            return;
+        }
+        const updatedPieces = pieces.reduce((results,piece)=>{
+            if(piece.x === promotionPawn.x && piece.y === promotionPawn.y){
+                piece.type = type;
+                piece.image = `icons/${type.toLowerCase()}_${piece.team}.png`;
+            }
+            results.push(piece);
+            
+            return results;
+        },[]);
+        setPieces(updatedPieces);
+        setPawnPromotionState(false);
     }
 
     let board=[];
@@ -187,11 +202,12 @@ function Chessboard() {
         <>
             {pawnPromotionState && <div id="pawn-promotion-modal" >
                 <div className="modal-body">
-                    <img src='/icons/rook_w.png' onClick={pawnPromotion}></img>
-                    <img src='/icons/bishop_w.png' onClick={pawnPromotion}></img>
-                    <img src='/icons/queen_w.png' onClick={pawnPromotion}></img>
-                    <img src='/icons/bishop_w.png' onClick={pawnPromotion}></img>
+                    <img src='/icons/rook_w.png' onClick={() => pawnPromotion("ROOK")}></img>
+                    <img src='/icons/bishop_w.png' onClick={() => pawnPromotion("BISHOP")}></img>
+                    <img src='/icons/queen_w.png' onClick={() => pawnPromotion("QUEEN")}></img>
+                    <img src='/icons/knight_w.png' onClick={() => pawnPromotion("KNIGHT")}></img>  
                 </div>
+                
             </div>}
             <div 
                 onMouseMove={e => movePiece(e)}
