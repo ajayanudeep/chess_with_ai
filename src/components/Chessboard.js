@@ -27,13 +27,14 @@ for(let p=0;p<2;p++){
     initialBoardState.push({image:`icons/king_${type}.png`, x:4 , y:y, type:"KING",team:`${type}` })
     initialBoardState.push({image:`icons/queen_${type}.png`, x:3 , y:y, type:"QUEEN",team:`${type}` })
 } 
-console.log(Chessboard.pieces);
+
 function Chessboard() {
     const chessboardRef= useRef(null);
     const [activePiece, setActivePiece] = useState(null);
     const [pieces, setPieces] = useState(initialBoardState)
     const [gridX, setGridX] = useState(0);
     const [gridY, setGridY] = useState(0);
+    const [pawnPromotionState, setPawnPromotionState] = useState(false);
     const refree = new Refree();
     
     const grabPiece = (e) =>{
@@ -125,6 +126,11 @@ function Chessboard() {
                             }
                             piece.x = x;
                             piece.y = y;
+                            
+                            const promoteRow = (piece.team === "w") ? 7 : 0;
+                            if(y === promoteRow){
+                                setPawnPromotionState(true);
+                            }
                             results.push(piece);
                         }
                         //pushing every piece except current and attacked piece
@@ -135,7 +141,6 @@ function Chessboard() {
                             }
                             results.push(piece);
                         }
-                        
                         return results;  
                     },[]);
                     setPieces(updatedPieces);
@@ -151,6 +156,10 @@ function Chessboard() {
         }
     }
     
+    const pawnPromotion = () =>{
+        // console.log("Promoting")
+    }
+
     let board=[];
     
     for(let j=verticalAxis.length-1;j>=0;j--){
@@ -174,15 +183,25 @@ function Chessboard() {
             //         console.log(p);
             // });
             // console.log(Chessboard.pieces);
-            return (
-                <div 
-            onMouseMove={e => movePiece(e)}
-            onMouseDown={e =>grabPiece(e)} 
-            onMouseUp={e =>dropPiece(e)} 
-            ref={chessboardRef}
-            className='cb'>
-            {board}
-        </div>
+    return (
+        <>
+            {pawnPromotionState && <div id="pawn-promotion-modal" >
+                <div className="modal-body">
+                    <img src='/icons/rook_w.png' onClick={pawnPromotion}></img>
+                    <img src='/icons/bishop_w.png' onClick={pawnPromotion}></img>
+                    <img src='/icons/queen_w.png' onClick={pawnPromotion}></img>
+                    <img src='/icons/bishop_w.png' onClick={pawnPromotion}></img>
+                </div>
+            </div>}
+            <div 
+                onMouseMove={e => movePiece(e)}
+                onMouseDown={e =>grabPiece(e)} 
+                onMouseUp={e =>dropPiece(e)} 
+                ref={chessboardRef}
+                className='cb'>
+                {board}
+            </div>
+        </>
     )
 }
 

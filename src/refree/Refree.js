@@ -112,7 +112,7 @@ export default class Refree {
                         valid = false;
                     }
                 }
-                else if(y < py && (Math.abs(x-px) === Math.abs(y-py))){
+                else if(y < py){
                     for (let i = 1; i < x-px; i++) {
                         if(this.tileIsOccupied(px+i,py-i,boardState)){
                             valid = false;

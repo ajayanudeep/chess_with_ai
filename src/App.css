@@ -48,3 +48,32 @@ body{
 .coin:active{
   cursor: grabbing;
 }
+#pawn-promotion-modal{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+
+#pawn-promotion-modal > .modal-body{
+  position: absolute;
+  height: 300px;
+  width: 720px;
+  top: calc(50% - 150px);
+  left: calc(50% - 360px);
+  display: flex;
+  align-items:center;
+  justify-content: space-around;
+  border-radius: 10px;
+  background-color: rgba(0,0,255,0.3);
+}
+#pawn-promotion-modal > .modal-body > img{
+  height: 150px;
+  padding: 15px;
+  border-radius: 50%;
+}
+#pawn-promotion-modal > .modal-body > img:hover{
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
