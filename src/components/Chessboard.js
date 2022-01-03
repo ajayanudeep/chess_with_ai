@@ -202,10 +202,10 @@ function Chessboard() {
         <>
             {pawnPromotionState && <div id="pawn-promotion-modal" >
                 <div className="modal-body">
-                    <img src='/icons/rook_w.png' onClick={() => pawnPromotion("ROOK")}></img>
-                    <img src='/icons/bishop_w.png' onClick={() => pawnPromotion("BISHOP")}></img>
-                    <img src='/icons/queen_w.png' onClick={() => pawnPromotion("QUEEN")}></img>
-                    <img src='/icons/knight_w.png' onClick={() => pawnPromotion("KNIGHT")}></img>  
+                    <img src={`/icons/rook_${promotionPawn.team}.png`} onClick={() => pawnPromotion("ROOK")}></img>
+                    <img src={`/icons/bishop_${promotionPawn.team}.png`} onClick={() => pawnPromotion("BISHOP")}></img>
+                    <img src={`/icons/queen_${promotionPawn.team}.png`} onClick={() => pawnPromotion("QUEEN")}></img>
+                    <img src={`/icons/knight_${promotionPawn.team}.png`} onClick={() => pawnPromotion("KNIGHT")}></img>  
                 </div>
                 
             </div>}
