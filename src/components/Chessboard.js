@@ -114,6 +114,7 @@ function Chessboard() {
                     setPieces(updatedPieces);
                 }
                 else if(valid){
+                    console.log(currentPiece.type,gridX, gridY, x, y,currentPiece.team);
                     const updatedPieces = pieces.reduce((results, piece) =>{
                         //Changing the position of Active piece and pushing to results
                         if(piece.x === gridX  && piece.y === gridY){
@@ -146,6 +147,8 @@ function Chessboard() {
                         return results;  
                     },[]);
                     setPieces(updatedPieces);
+                    console.log(AI.get_ai_move(pieces,[]))
+                    
                 }
                 //Getting back to original location
                 else{

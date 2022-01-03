@@ -1,4 +1,5 @@
 import Chessboard from "./components/Chessboard";
+
 const pawn_table=[
     [ 0,  0,  0,  0,  0,  0,  0,  0],
     [ 5, 10, 10,-20,-20, 10, 10,  5],
@@ -57,7 +58,7 @@ piece_values.QUEEN=900;
 piece_values.KING=20000;
 piece_values.PAWN=100;
 class Hueristics{
-    evaluate(chessboard){
+    static evaluate(chessboard){
         var material=this.get_material_score(chessboard);
         var pawns=this.get_piece_positional_score(chessboard,"PAWN",pawn_table);
         var knights=this.get_piece_positional_score(chessboard,"KNIGHT",knight_table);
@@ -67,12 +68,12 @@ class Hueristics{
 
         return material+pawns+knights+bishops+rooks+queens
     }
-    get_piece_positional_score(chessboard,piece_type,table){
+    static get_piece_positional_score(chessboard,piece_type,table){
         var white=0;
         var black=0;
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
-                const piece = chessboard.pieces.foreach((p) => p.x === i && p.y === j);
+                var piece = chessboard.find( p => p.x === i && p.y === j);
                 if(piece){
                     if (piece.type===piece_type) {
                         if(piece.team==="w"){
@@ -87,12 +88,12 @@ class Hueristics{
         }
         return white-black;
     }
-    get_material_score(chessboard){
+    static get_material_score(chessboard){
         var white=0;
         var black=0;
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
-                const piece = chessboard.pieces.foreach((p) => p.x === i && p.y === j);
+                var piece = chessboard.find( p => p.x === i && p.y === j);
                 if(piece){
                     if (piece.team==="w") {
                         white+=piece_values[`${piece.type}`];
@@ -110,7 +111,7 @@ function get_piece(chessboard,x,y) {
     if (!in_bounds(x,y)){
         return 0;
     }
-    const piece = chessboard.pieces.foreach((p) => p.x === x && p.y === y);
+    const piece = chessboard.find(p => p.x === x && p.y === y);
     if(!piece)
         return 0;
     return piece;
@@ -122,9 +123,9 @@ function in_bounds(x,y) {
 function get_move(chessboard,xto,yto,piece) {
     var move=0;
     if(in_bounds(xto,yto)){
-        var coin=get_piece(chessboard,xto,yto,piece)
+        var coin=get_piece(chessboard,xto,yto)
         if(coin!=0){
-            if(coin.team!==piece.team){
+            if(coin.team!=piece.team){
                 move={xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false};
             }
         }
@@ -173,7 +174,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
             break;
         }
         var coin=get_piece(chessboard,piece.x+i,piece.y+i);
-        moves.push(get_move(chessboard,piece.x+i,piece.y+i));
+        moves.push(get_move(chessboard,piece.x+i,piece.y+i,piece));
         if(coin!=0)
             break
     }
@@ -182,7 +183,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
             break;
         }
         var coin=get_piece(chessboard,piece.x+i,piece.y-i);
-        moves.push(get_move(chessboard,piece.x+i,piece.y-i));
+        moves.push(get_move(chessboard,piece.x+i,piece.y-i,piece));
         if(coin!=0)
             break
     }
@@ -191,7 +192,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
             break;
         }
         var coin=get_piece(chessboard,piece.x-i,piece.y-i);
-        moves.push(get_move(chessboard,piece.x-i,piece.y-i));
+        moves.push(get_move(chessboard,piece.x-i,piece.y-i,piece));
         if(coin!=0)
             break
     }
@@ -200,7 +201,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
             break;
         }
         var coin=get_piece(chessboard,piece.x-i,piece.y+i);
-        moves.push(get_move(chessboard,piece.x-i,piece.y+i));
+        moves.push(get_move(chessboard,piece.x-i,piece.y+i,piece));
         if(coin!=0)
             break
     }
@@ -208,18 +209,18 @@ function get_possible_diagonal_moves(chessboard,piece) {
 }
 function remove_null_from_list(l){
     const moves=[];
-    for (const key in l) {
-        if (key!=0) {
-            moves.push(key);
+    l.forEach(element => {
+        if(element!=0){
+            moves.push(element);
         }
-    }
+    });
     return moves
 }
 
 var piece_classes={};
 
 piece_classes.PAWN = class {
-    is_starting_position(piece){
+    static is_starting_position(piece){
         if(piece.team==="b"){
             return piece.y==6;
         }
@@ -304,10 +305,10 @@ function get_possible_moves(chessboard,color){
     var moves=[]
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-            const piece = chessboard.pieces.foreach((p) => p.x === i && p.y === j);
+            const piece = chessboard.find(p => p.x === i && p.y === j);
             if(piece){
                 if (piece.team===color) {
-                    moves.concat(piece_classes[`${piece.type}`].get_possible_moves(chessboard,piece));
+                    moves.push(piece_classes[`${piece.type}`].get_possible_moves(chessboard,piece));
                 }
             }
         }
@@ -325,28 +326,35 @@ function equals(move1,move2) {
     return move1.xfrom==move2.xfrom && move1.yfrom==move2.yfrom && move1.xto==move2.xto && move1.yto==move2.yto;
 }
 function perform_move(chessboard,move) {
-    var piece = chessboard.pieces.foreach((p) => p.x === move.xfrom && p.y === move.yfrom);
-    piece.x = move.xto;
-    piece.y = move.yto;
-    chessboard.pieces.forEach(p => {
-        if(p.x===move.xto && p.y === move.yto){
-            p=piece;
-        }
-        if(p.x===move.xfrom && p.y === move.yfrom){
-            p=0;
-        }     
-    });
-    
-    if(piece.type==="PAWN"){
-        if(piece.y==0 || piece.y == 7){
-            chessboard.pieces.forEach(p => {
-                if(p.x===piece.x && p.y === piece.yto){
-                    p.type="QUEEN";
-                    p.image=`icons/queen_${p.team}.png`;
-                }  
-            });        
+    console.log(chessboard)
+    var piece = chessboard.find( p => p.x === move.xfrom && p.y === move.yfrom);
+    console.log(piece)
+    if(piece){
+        piece.x = move.xto;
+        piece.y = move.yto;
+        chessboard=chessboard.map(p => {
+            if(p.x===move.xto && p.y === move.yto){
+                p=piece;
+            }
+            if(p.x===move.xfrom && p.y === move.yfrom){
+                p=0;
+            }  
+            return p;   
+        });
+    }
+    if(piece){
+        if(piece.type==="PAWN"){
+            if(piece.y==0 || piece.y == 7){
+                chessboard.forEach(p => {
+                    if(p.x===piece.x && p.y === piece.yto){
+                        p.type="QUEEN";
+                        p.image=`icons/queen_${p.team}.png`;
+                    }  
+                });        
+            }
         }
     }
+    return chessboard
 }
 function is_check(chessboard,color) {
     var other_color = "w";
@@ -359,7 +367,7 @@ function is_check(chessboard,color) {
         var king_found = false;
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
-                const piece = Chessboard.pieces.foreach((p) => p.x === i && p.y === j);
+                const piece = chessboard.find(p => p.x === i && p.y === j);
                 if(piece){
                     if (piece.team===color && piece.type==="KING") {
                         king_found=true;
@@ -375,21 +383,28 @@ function is_check(chessboard,color) {
 }
 const infinity=100000000;
 class AI{
-    get_ai_move(chessboard,invalid_moves){
+    static get_ai_move(chessboard,invalid_moves){
         var best_move=0;
         var best_score=infinity;
-        for (const move in get_possible_moves(chessboard,"b")) {
-            if(is_invalid_move(move,invalid_moves)){
-                continue;
-            }
-            var copy = chessboard;
-            perform_move(copy,move);
-            var score = this.alphabeta(copy,2,-infinity,infinity,true);
-            if(score<best_score){
-                best_move=move;
-                best_score=score;
-            }
-        }
+        console.log(best_move)
+        var copy;
+        get_possible_moves(chessboard,"b").forEach(moves => {
+            moves.forEach(move => {
+                if(!is_invalid_move(move,invalid_moves)){
+                    copy=chessboard
+                    copy=perform_move(copy,move);
+                    console.log(copy)
+                    if(copy==chessboard){
+                        console.log("asas")
+                    }
+                    var score = this.alphabeta(copy,2,-infinity,infinity,true);
+                    if(score<best_score){
+                        best_move=move;
+                        best_score=score;
+                    }
+                }
+            });
+        });
         if(best_move==0){
             return 0;
         }
@@ -401,38 +416,86 @@ class AI{
         }
         return best_move;
     }
-    alphabeta(chessboard,depth,a,b,maximizing){
+    static alphabeta(chessboard,depth,a,b,maximizing){
         if(depth==0){
             return Hueristics.evaluate(chessboard);
         }
 
         if(maximizing){
             var best_score = -infinity;
-            for (const move in get_possible_moves("w")) {
-                var copy = chessboard;
-                perform_move(copy,move);
-                
-                var best_score = Math.max(best_score,this.alphabeta(copy,depth-1,a,b,false))
-                a = Math.max(a,best_score);
-                if(b<=a){
-                    break;
+            var possible_moves=get_possible_moves(chessboard,"w");
+            for (let i = 0; i < possible_moves.length; i++) {
+                for (let j = 0; j < possible_moves[i].length; j++) {
+                    var copy = perform_move(copy,possible_moves[i][j]);
+                    var best_score = Math.max(best_score,this.alphabeta(copy,depth-1,a,b,false))
+                    a = Math.max(a,best_score);
+                    if(b<=a){
+                        break;
+                    }
+                    return best_score;
                 }
-                return best_score;
+                
             }
+            // get_possible_moves(chessboard,"w").forEach(moves => {
+            //     moves.forEach(move => {
+            //         var copy = perform_move(copy,move);
+            //         var best_score = Math.max(best_score,this.alphabeta(copy,depth-1,a,b,false))
+            //         a = Math.max(a,best_score);
+            //         if(b<=a){
+            //             return ;
+            //         }
+            //         return best_score;
+            //     });
+            // });
+            // for (const move in get_possible_moves(chessboard,"w")) {
+            //     var copy = perform_move(copy,move);
+                
+            //     var best_score = Math.max(best_score,this.alphabeta(copy,depth-1,a,b,false))
+            //     a = Math.max(a,best_score);
+            //     if(b<=a){
+            //         break;
+            //     }
+            //     return best_score;
+            // }
         }
         else{
-            var best_score=infinity;
-            for (const move in get_possible_moves("b")) {
-                var copy = chessboard;
-                perform_move(copy,move);
-                
-                var best_score = Math.min(best_score,this.alphabeta(copy,depth-1,a,b,true))
-                b = Math.min(b,best_score);
-                if(b<=a){
-                    break;
+            var best_score = infinity;
+            var possible_moves=get_possible_moves(chessboard,"w");
+            for (let i = 0; i < possible_moves.length; i++) {
+                for (let j = 0; j < possible_moves[i].length; j++) {
+                    var copy = perform_move(copy,possible_moves[i][j]);
+                    var best_score = Math.min(best_score,this.alphabeta(copy,depth-1,a,b,false))
+                    a = Math.min(a,best_score);
+                    if(b<=a){
+                        return ;
+                    }
+                    return best_score;
                 }
-                return best_score;
+                
             }
+            // get_possible_moves(chessboard,"b").forEach(moves => {
+            //     moves.forEach(move => {
+            //         var copy = perform_move(copy,move);
+            //         var best_score = Math.min(best_score,this.alphabeta(copy,depth-1,a,b,false))
+            //         a = Math.min(a,best_score);
+            //         if(b<=a){
+            //             return ;
+            //         }
+            //         return best_score;
+            //     });
+            // });
+            // var best_score=infinity;
+            // for (const move in get_possible_moves(chessboard,"b")) {
+            //     var copy = chessboard;
+            //     perform_move(copy,move);
+                
+            //     var best_score = Math.min(best_score,this.alphabeta(copy,depth-1,a,b,true))
+            //     b = Math.min(b,best_score);
+            //     if(b<=a){
+            //         break;
+            //     }
+            //     return best_score;
+            // }
         }
     }
 }

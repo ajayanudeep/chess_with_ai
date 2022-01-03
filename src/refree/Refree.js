@@ -35,7 +35,9 @@ export default class Refree {
         return false;
     }
     isValidMove(px,py,x,y,type,team,boardState){
-        console.log(type,px, py, x, y,team);
+        if(team=="b"){
+            return false
+        }
         //Pawn
         if(type === "PAWN"){
             const specialRow = (team === "w") ? 1: 6;
