@@ -124,8 +124,8 @@ function get_move(chessboard,xto,yto,piece) {
     var move=0;
     if(in_bounds(xto,yto)){
         var coin=get_piece(chessboard,xto,yto)
-        if(coin!=0){
-            if(coin.team!=piece.team){
+        if(coin!==0){
+            if(coin.team!==piece.team){
                 move= {xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false};
             }
         }
@@ -141,28 +141,28 @@ function get_possible_horizontal_moves(chessboard,piece){
     for (let i = 1; i < 8-piece.x; i++) {
         var coin = get_piece(chessboard,piece.x+i,piece.y);
         moves.push(get_move(chessboard,piece.x+i,piece.y,piece));
-        if(coin!=0)
+        if(coin!==0)
             break;
     }
     // horizontal left movement
     for (let i = 1; i < piece.x+1; i++) {
         var coin = get_piece(chessboard,piece.x-i,piece.y);
         moves.push(get_move(chessboard,piece.x-i,piece.y,piece));
-        if(coin!=0)
+        if(coin!==0)
             break;
     }
     //vertical downwards
     for (let i = 1; i < 8 - piece.y; i++) {
         var coin = get_piece(chessboard,piece.x,piece.y+i);
         moves.push(get_move(chessboard,piece.x,piece.y+i,piece));
-        if(coin!=0)
+        if(coin!==0)
             break;
     }
     // vertical upwards
     for (let i = 1; i < piece.y+1; i++) {
         var coin = get_piece(chessboard,piece.x,piece.y-i);
         moves.push(get_move(chessboard,piece.x,piece.y-i,piece));
-        if(coin!=0)
+        if(coin!==0)
             break;
     }
     return remove_null_from_list(moves)
@@ -175,7 +175,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
         }
         var coin=get_piece(chessboard,piece.x+i,piece.y+i);
         moves.push(get_move(chessboard,piece.x+i,piece.y+i,piece));
-        if(coin!=0)
+        if(coin!==0)
             break
     }
     for (let i = 1; i < 8; i++) {
@@ -184,7 +184,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
         }
         var coin=get_piece(chessboard,piece.x+i,piece.y-i);
         moves.push(get_move(chessboard,piece.x+i,piece.y-i,piece));
-        if(coin!=0)
+        if(coin!==0)
             break
     }
     for (let i = 1; i < 8; i++) {
@@ -193,7 +193,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
         }
         var coin=get_piece(chessboard,piece.x-i,piece.y-i);
         moves.push(get_move(chessboard,piece.x-i,piece.y-i,piece));
-        if(coin!=0)
+        if(coin!==0)
             break
     }
     for (let i = 1; i < 8; i++) {
@@ -202,7 +202,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
         }
         var coin=get_piece(chessboard,piece.x-i,piece.y+i);
         moves.push(get_move(chessboard,piece.x-i,piece.y+i,piece));
-        if(coin!=0)
+        if(coin!==0)
             break
     }
     return remove_null_from_list(moves);
@@ -210,7 +210,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
 function remove_null_from_list(l){
     const moves=[];
     l.forEach(element => {
-        if(element!=0){
+        if(element!==0){
             moves.push(element);
         }
     });
@@ -222,32 +222,32 @@ var piece_classes={};
 piece_classes.PAWN = class {
     static is_starting_position(piece){
         if(piece.team==="b"){
-            return piece.y==6;
+            return piece.y===6;
         }
         else{
-            return piece.y==1;
+            return piece.y===1;
         }
     }
     static get_possible_moves(chessboard,piece) {
         var moves=[];
         var direction=-1;
-        if(piece.team=="w"){
+        if(piece.team==="w"){
             direction=1;
         }
         // one step forward
-        if(get_piece(chessboard,piece.x,piece.y+direction)==0){
+        if(get_piece(chessboard,piece.x,piece.y+direction)===0){
             moves.push(get_move(chessboard,piece.x,piece.y+direction,piece));
         }
         // two step forward
-        if(this.is_starting_position(piece) && get_piece(chessboard,piece.x,piece.y+direction,piece) == 0 && get_piece(chessboard,piece.x,piece.y+direction*2,piece) == 0){
+        if(this.is_starting_position(piece) && get_piece(chessboard,piece.x,piece.y+direction,piece) === 0 && get_piece(chessboard,piece.x,piece.y+direction*2,piece) === 0){
             moves.push(get_move(chessboard,piece.x,piece.y+direction*2,piece));
         }
         var coin=get_piece(chessboard,piece.x + 1,piece.y + direction);
-        if(coin!=0){
+        if(coin!==0){
             moves.push(get_move(chessboard,piece.x + 1,piece.y + direction,piece));
         }
         coin=get_piece(chessboard,piece.x - 1,piece.y + direction);
-        if(coin!=0){
+        if(coin!==0){
             moves.push(get_move(chessboard,piece.x - 1,piece.y + direction,piece));
         }
         return remove_null_from_list(moves)
@@ -323,7 +323,7 @@ function is_invalid_move(move,invalid_moves) {
     }
 }
 function equals(move1,move2) {
-    return move1.xfrom==move2.xfrom && move1.yfrom==move2.yfrom && move1.xto==move2.xto && move1.yto==move2.yto;
+    return move1.xfrom===move2.xfrom && move1.yfrom===move2.yfrom && move1.xto===move2.xto && move1.yto===move2.yto;
 }
 function perform_move(chessboard,move) {
     var piece = chessboard.find( p => p.x === move.xfrom && p.y === move.yfrom);
@@ -349,7 +349,7 @@ function perform_move(chessboard,move) {
     }
     if(piece){
         if(piece.type==="PAWN"){
-            if(piece.y==0 ){
+            if(piece.y===0 ){
                 new_chessboard.forEach(p => {
                     if(p.x===piece.x && p.y === piece.yto){
                         p.type="QUEEN";
@@ -366,7 +366,7 @@ function clone(chessboard){
 }
 function is_check(chessboard,color) {
     var other_color = "w";
-    if(color=="w"){
+    if(color==="w"){
         other_color="b";
     }
     for (const move in get_possible_moves(chessboard,other_color)) {
@@ -411,7 +411,7 @@ class AI{
                 }
             });
         });
-        if(best_move==0){
+        if(best_move===0){
             return 0;
         }
         copy=clone(chessboard);
@@ -423,7 +423,7 @@ class AI{
         return best_move;
     }
     static alphabeta(chessboard,depth,a,b,maximizing){
-        if(depth==0){
+        if(depth===0){
             return Hueristics.evaluate(chessboard);
         }
         var copy = clone(chessboard);
