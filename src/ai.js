@@ -126,11 +126,11 @@ function get_move(chessboard,xto,yto,piece) {
         var coin=get_piece(chessboard,xto,yto)
         if(coin!=0){
             if(coin.team!=piece.team){
-                move={xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false};
+                move= {xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false};
             }
         }
         else{
-            move={xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false};
+            move= {xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false};
         }
     }
     return move;
@@ -327,10 +327,13 @@ function equals(move1,move2) {
 }
 function perform_move(chessboard,move) {
     var piece = chessboard.find( p => p.x === move.xfrom && p.y === move.yfrom);
+    var new_chessboard = [];
     if(piece){
+        console.log(chessboard);
+        const attacked_piece = chessboard.find((p) => p.x === move.xto && p.y === move.yto);
         piece.x = move.xto;
         piece.y = move.yto;
-        chessboard=chessboard.map(p => {
+        new_chessboard = chessboard.map( (p) => {
             if(p.x===move.xto && p.y === move.yto){
                 p=piece;
             }
@@ -339,11 +342,15 @@ function perform_move(chessboard,move) {
             }  
             return p;   
         });
+        console.log(new_chessboard);
+        piece.x= move.xfrom;
+        piece.y= move.yfrom;
+        
     }
     if(piece){
         if(piece.type==="PAWN"){
-            if(piece.y==0 || piece.y == 7){
-                chessboard.forEach(p => {
+            if(piece.y==0 ){
+                new_chessboard.forEach(p => {
                     if(p.x===piece.x && p.y === piece.yto){
                         p.type="QUEEN";
                         p.image=`icons/queen_${p.team}.png`;
@@ -352,7 +359,10 @@ function perform_move(chessboard,move) {
             }
         }
     }
-    return chessboard
+    return new_chessboard
+}
+function clone(chessboard){
+    return chessboard;
 }
 function is_check(chessboard,color) {
     var other_color = "w";
@@ -384,12 +394,13 @@ class AI{
     static get_ai_move(chessboard,invalid_moves){
         var best_move=0;
         var best_score=infinity;
-        var copy=chessboard;
+        var copy=clone(chessboard);
+        var new_chessboard = [];
         get_possible_moves(copy,"b").forEach(moves => {
             moves.forEach(move => {
                 if(!is_invalid_move(move,invalid_moves)){
-                    copy=perform_move(copy,move);
-                    if(copy==chessboard){
+                    copy = perform_move(copy,move);
+                    if(copy === chessboard){
                         console.log("asas")
                     }
                     var score = this.alphabeta(copy,2,-infinity,infinity,true);
@@ -403,8 +414,8 @@ class AI{
         if(best_move==0){
             return 0;
         }
-        copy=chessboard;
-        perform_move(copy,best_move);
+        copy=clone(chessboard);
+        copy = perform_move(copy,best_move);
         if(is_check(copy,"b")){
             invalid_moves.push(best_move);
             return this.get_ai_move(chessboard,invalid_moves);
@@ -415,7 +426,8 @@ class AI{
         if(depth==0){
             return Hueristics.evaluate(chessboard);
         }
-        var copy = chessboard
+        var copy = clone(chessboard);
+
         if(maximizing){
             var best_score = -infinity;
             var possible_moves=get_possible_moves(chessboard,"w");
@@ -440,11 +452,10 @@ class AI{
                     var best_score = Math.min(best_score,this.alphabeta(copy,depth-1,a,b,false))
                     a = Math.min(a,best_score);
                     if(b<=a){
-                        return ;
+                        break ;
                     }
                     return best_score;
-                }
-                
+                } 
             }
         }
     }

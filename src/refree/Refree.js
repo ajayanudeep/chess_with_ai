@@ -35,7 +35,7 @@ export default class Refree {
         return false;
     }
     isValidMove(px,py,x,y,type,team,boardState){
-        if(team=="b"){
+        if(team === "b"){
             return false
         }
         //Pawn
