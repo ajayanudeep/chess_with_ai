@@ -1,5 +1,3 @@
-import Chessboard from "./components/Chessboard";
-
 const pawn_table=[
     [ 0,  0,  0,  0,  0,  0,  0,  0],
     [ 5, 10, 10,-20,-20, 10, 10,  5],
@@ -137,30 +135,31 @@ function get_move(chessboard,xto,yto,piece) {
 }
 function get_possible_horizontal_moves(chessboard,piece){
     var moves=[];
+    var coin=0;
     // horizontal right movement
     for (let i = 1; i < 8-piece.x; i++) {
-        var coin = get_piece(chessboard,piece.x+i,piece.y);
+        coin = get_piece(chessboard,piece.x+i,piece.y);
         moves.push(get_move(chessboard,piece.x+i,piece.y,piece));
         if(coin!==0)
             break;
     }
     // horizontal left movement
     for (let i = 1; i < piece.x+1; i++) {
-        var coin = get_piece(chessboard,piece.x-i,piece.y);
+        coin = get_piece(chessboard,piece.x-i,piece.y);
         moves.push(get_move(chessboard,piece.x-i,piece.y,piece));
         if(coin!==0)
             break;
     }
     //vertical downwards
     for (let i = 1; i < 8 - piece.y; i++) {
-        var coin = get_piece(chessboard,piece.x,piece.y+i);
+        coin = get_piece(chessboard,piece.x,piece.y+i);
         moves.push(get_move(chessboard,piece.x,piece.y+i,piece));
         if(coin!==0)
             break;
     }
     // vertical upwards
     for (let i = 1; i < piece.y+1; i++) {
-        var coin = get_piece(chessboard,piece.x,piece.y-i);
+        coin = get_piece(chessboard,piece.x,piece.y-i);
         moves.push(get_move(chessboard,piece.x,piece.y-i,piece));
         if(coin!==0)
             break;
@@ -169,11 +168,12 @@ function get_possible_horizontal_moves(chessboard,piece){
 }
 function get_possible_diagonal_moves(chessboard,piece) {
     var moves=[];
+    var coin =0 ;
     for (let i = 1; i < 8; i++) {
         if(!in_bounds(piece.x+i,piece.y+i)){
             break;
         }
-        var coin=get_piece(chessboard,piece.x+i,piece.y+i);
+        coin=get_piece(chessboard,piece.x+i,piece.y+i);
         moves.push(get_move(chessboard,piece.x+i,piece.y+i,piece));
         if(coin!==0)
             break
@@ -182,7 +182,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
         if(!in_bounds(piece.x+i,piece.y-i)){
             break;
         }
-        var coin=get_piece(chessboard,piece.x+i,piece.y-i);
+        coin=get_piece(chessboard,piece.x+i,piece.y-i);
         moves.push(get_move(chessboard,piece.x+i,piece.y-i,piece));
         if(coin!==0)
             break
@@ -191,7 +191,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
         if(!in_bounds(piece.x-i,piece.y-i)){
             break;
         }
-        var coin=get_piece(chessboard,piece.x-i,piece.y-i);
+        coin=get_piece(chessboard,piece.x-i,piece.y-i);
         moves.push(get_move(chessboard,piece.x-i,piece.y-i,piece));
         if(coin!==0)
             break
@@ -200,7 +200,7 @@ function get_possible_diagonal_moves(chessboard,piece) {
         if(!in_bounds(piece.x-i,piece.y+i)){
             break;
         }
-        var coin=get_piece(chessboard,piece.x-i,piece.y+i);
+        coin=get_piece(chessboard,piece.x-i,piece.y+i);
         moves.push(get_move(chessboard,piece.x-i,piece.y+i,piece));
         if(coin!==0)
             break
