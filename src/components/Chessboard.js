@@ -89,7 +89,7 @@ function Chessboard() {
             const y = Math.abs((Math.floor((e.clientY - chess_board.offsetTop +40)/100))-7);
             
             const currentPiece = pieces.find(p => p.x === gridX && p.y === gridY);
-            const attackedPiece = pieces.find(p => p.x === x && p.y === y);
+            // const attackedPiece = pieces.find(p => p.x === x && p.y === y);
             
             if(currentPiece){
                 const valid = refree.isValidMove(gridX, gridY, x, y, currentPiece.type, currentPiece.team, pieces);
@@ -150,6 +150,7 @@ function Chessboard() {
                     },[]);
                     setPieces(updatedPieces);
                     let chessboard_=clone(pieces);
+                    console.log(pieces);
                     let updatedPosition = AI.get_ai_move(chessboard_,[])
                     const updatePieces = pieces.reduce((results, piece) =>{
                         //Changing the position of Active piece and pushing to results
@@ -158,12 +159,14 @@ function Chessboard() {
                             piece.y=updatedPosition.yto;
                             results.push(piece);
                         }
-                        else{
+                        else if(!(piece.x === updatedPosition.xto && piece.y === updatedPosition.yto)){
                             results.push(piece);
                         }
+                        
                         return results;  
                     },[]);
                     setPieces(updatePieces);
+                    
                 }
                 //Getting back to original location
                 else{
@@ -173,6 +176,7 @@ function Chessboard() {
                 }
             }
             setActivePiece(null);
+            console.log(pieces)
         }
     }
     

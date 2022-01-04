@@ -329,7 +329,7 @@ function perform_move(chessboard,move) {
     var piece = chessboard.find( p => p.x === move.xfrom && p.y === move.yfrom);
     var new_chessboard = [];
     if(piece){
-        console.log(chessboard);
+        // console.log(chessboard);
         const attacked_piece = chessboard.find((p) => p.x === move.xto && p.y === move.yto);
         piece.x = move.xto;
         piece.y = move.yto;
@@ -342,7 +342,7 @@ function perform_move(chessboard,move) {
             }  
             return p;   
         });
-        console.log(new_chessboard);
+        // console.log(new_chessboard);
         piece.x= move.xfrom;
         piece.y= move.yfrom;
         
@@ -429,13 +429,14 @@ class AI{
         var copy = clone(chessboard);
         var best_score;
         var possible_moves;
+        var new_chessboard ;
         if(maximizing){
             best_score = -infinity;
             possible_moves=get_possible_moves(chessboard,"w");
             for (let i = 0; i < possible_moves.length; i++) {
                 for (let j = 0; j < possible_moves[i].length; j++) {
-                    copy = perform_move(copy,possible_moves[i][j]);
-                    best_score = Math.max(best_score,this.alphabeta(copy,depth-1,a,b,false))
+                    new_chessboard = perform_move(copy,possible_moves[i][j]);
+                    best_score = Math.max(best_score,this.alphabeta(new_chessboard, depth-1, a, b, false));
                     a = Math.max(a,best_score);
                     if(b<=a){
                         break;
@@ -449,9 +450,9 @@ class AI{
             possible_moves=get_possible_moves(chessboard,"w");
             for (let i = 0; i < possible_moves.length; i++) {
                 for (let j = 0; j < possible_moves[i].length; j++) {
-                    copy = perform_move(copy,possible_moves[i][j]);
-                    best_score = Math.min(best_score,this.alphabeta(copy,depth-1,a,b,false))
-                    a = Math.min(a,best_score);
+                    new_chessboard = perform_move(copy,possible_moves[i][j]);
+                    best_score = Math.min(best_score,this.alphabeta(new_chessboard, depth-1, a, b, false));
+                    a = Math.min(a, best_score);
                     if(b<=a){
                         break ;
                     }
