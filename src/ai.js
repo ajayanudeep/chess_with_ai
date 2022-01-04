@@ -326,9 +326,7 @@ function equals(move1,move2) {
     return move1.xfrom==move2.xfrom && move1.yfrom==move2.yfrom && move1.xto==move2.xto && move1.yto==move2.yto;
 }
 function perform_move(chessboard,move) {
-    console.log(chessboard)
     var piece = chessboard.find( p => p.x === move.xfrom && p.y === move.yfrom);
-    console.log(piece)
     if(piece){
         piece.x = move.xto;
         piece.y = move.yto;
@@ -386,14 +384,11 @@ class AI{
     static get_ai_move(chessboard,invalid_moves){
         var best_move=0;
         var best_score=infinity;
-        console.log(best_move)
-        var copy;
-        get_possible_moves(chessboard,"b").forEach(moves => {
+        var copy=chessboard;
+        get_possible_moves(copy,"b").forEach(moves => {
             moves.forEach(move => {
                 if(!is_invalid_move(move,invalid_moves)){
-                    copy=chessboard
                     copy=perform_move(copy,move);
-                    console.log(copy)
                     if(copy==chessboard){
                         console.log("asas")
                     }
@@ -411,7 +406,7 @@ class AI{
         copy=chessboard;
         perform_move(copy,best_move);
         if(is_check(copy,"b")){
-            invalid_moves.append(best_move);
+            invalid_moves.push(best_move);
             return this.get_ai_move(chessboard,invalid_moves);
         }
         return best_move;
@@ -420,43 +415,21 @@ class AI{
         if(depth==0){
             return Hueristics.evaluate(chessboard);
         }
-
+        var copy = chessboard
         if(maximizing){
             var best_score = -infinity;
             var possible_moves=get_possible_moves(chessboard,"w");
             for (let i = 0; i < possible_moves.length; i++) {
                 for (let j = 0; j < possible_moves[i].length; j++) {
-                    var copy = perform_move(copy,possible_moves[i][j]);
+                    copy = perform_move(copy,possible_moves[i][j]);
                     var best_score = Math.max(best_score,this.alphabeta(copy,depth-1,a,b,false))
                     a = Math.max(a,best_score);
                     if(b<=a){
                         break;
                     }
                     return best_score;
-                }
-                
+                }    
             }
-            // get_possible_moves(chessboard,"w").forEach(moves => {
-            //     moves.forEach(move => {
-            //         var copy = perform_move(copy,move);
-            //         var best_score = Math.max(best_score,this.alphabeta(copy,depth-1,a,b,false))
-            //         a = Math.max(a,best_score);
-            //         if(b<=a){
-            //             return ;
-            //         }
-            //         return best_score;
-            //     });
-            // });
-            // for (const move in get_possible_moves(chessboard,"w")) {
-            //     var copy = perform_move(copy,move);
-                
-            //     var best_score = Math.max(best_score,this.alphabeta(copy,depth-1,a,b,false))
-            //     a = Math.max(a,best_score);
-            //     if(b<=a){
-            //         break;
-            //     }
-            //     return best_score;
-            // }
         }
         else{
             var best_score = infinity;
@@ -473,29 +446,6 @@ class AI{
                 }
                 
             }
-            // get_possible_moves(chessboard,"b").forEach(moves => {
-            //     moves.forEach(move => {
-            //         var copy = perform_move(copy,move);
-            //         var best_score = Math.min(best_score,this.alphabeta(copy,depth-1,a,b,false))
-            //         a = Math.min(a,best_score);
-            //         if(b<=a){
-            //             return ;
-            //         }
-            //         return best_score;
-            //     });
-            // });
-            // var best_score=infinity;
-            // for (const move in get_possible_moves(chessboard,"b")) {
-            //     var copy = chessboard;
-            //     perform_move(copy,move);
-                
-            //     var best_score = Math.min(best_score,this.alphabeta(copy,depth-1,a,b,true))
-            //     b = Math.min(b,best_score);
-            //     if(b<=a){
-            //         break;
-            //     }
-            //     return best_score;
-            // }
         }
     }
 }

@@ -27,7 +27,9 @@ for(let p=0;p<2;p++){
     initialBoardState.push({image:`icons/king_${type}.png`, x:4 , y:y, type:"KING",team:`${type}` })
     initialBoardState.push({image:`icons/queen_${type}.png`, x:3 , y:y, type:"QUEEN",team:`${type}` })
 } 
-
+function clone(chessboard) {
+    return chessboard;
+}
 function Chessboard() {
     const chessboardRef= useRef(null);
     const [activePiece, setActivePiece] = useState(null);
@@ -147,8 +149,21 @@ function Chessboard() {
                         return results;  
                     },[]);
                     setPieces(updatedPieces);
-                    console.log(AI.get_ai_move(pieces,[]))
-                    
+                    let chessboard_=clone(pieces);
+                    let updatedPosition = AI.get_ai_move(chessboard_,[])
+                    const updatePieces = pieces.reduce((results, piece) =>{
+                        //Changing the position of Active piece and pushing to results
+                        if(piece.x === updatedPosition.xfrom  && piece.y === updatedPosition.yfrom){
+                            piece.x=updatedPosition.xto;
+                            piece.y=updatedPosition.yto;
+                            results.push(piece);
+                        }
+                        else{
+                            results.push(piece);
+                        }
+                        return results;  
+                    },[]);
+                    setPieces(updatePieces);
                 }
                 //Getting back to original location
                 else{
