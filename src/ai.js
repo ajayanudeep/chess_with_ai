@@ -329,7 +329,6 @@ function perform_move(chessboard,move) {
     var piece = chessboard.find( p => p.x === move.xfrom && p.y === move.yfrom);
     var new_chessboard = [];
     if(piece){
-        console.log(chessboard);
         const attacked_piece = chessboard.find((p) => p.x === move.xto && p.y === move.yto);
         piece.x = move.xto;
         piece.y = move.yto;
@@ -342,7 +341,6 @@ function perform_move(chessboard,move) {
             }  
             return p;   
         });
-        console.log(new_chessboard);
         piece.x= move.xfrom;
         piece.y= move.yfrom;
         
