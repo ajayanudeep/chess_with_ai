@@ -124,11 +124,11 @@ function get_move(chessboard,xto,yto,piece) {
         var coin=get_piece(chessboard,xto,yto)
         if(coin!==0){
             if(coin.team!==piece.team){
-                move= {xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false};
+                move= {xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false,piece:piece};
             }
         }
         else{
-            move= {xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false};
+            move= {xfrom:piece.x,yfrom:piece.y,xto:xto,yto:yto,castling_move:false,piece:piece};
         }
     }
     return move;
@@ -327,7 +327,7 @@ function equals(move1,move2) {
 }
 function perform_move(chessboard,move) {
     var piece = chessboard.find( p => p.x === move.xfrom && p.y === move.yfrom);
-    var new_chessboard = [];
+    var new_chessboard=[];
     if(piece){
         // console.log(chessboard);
         const attacked_piece = chessboard.find((p) => p.x === move.xto && p.y === move.yto);
@@ -342,22 +342,8 @@ function perform_move(chessboard,move) {
             }  
             return p;   
         });
-        // console.log(new_chessboard);
         piece.x= move.xfrom;
-        piece.y= move.yfrom;
-        
-    }
-    if(piece){
-        if(piece.type==="PAWN"){
-            if(piece.y===0 ){
-                new_chessboard.forEach(p => {
-                    if(p.x===piece.x && p.y === piece.yto){
-                        p.type="QUEEN";
-                        p.image=`icons/queen_${p.team}.png`;
-                    }  
-                });        
-            }
-        }
+        piece.y= move.yfrom;    
     }
     return new_chessboard
 }
