@@ -56,7 +56,8 @@ function Chessboard() {
             //setting location of a piece when clicked
             setGridX(Math.floor((e.clientX - chess_board.offsetLeft +40)/100));
             setGridY(Math.abs((Math.floor((e.clientY - chess_board.offsetTop +40)/100))-7));
-        }   
+        } 
+        console.log(element);  
     }
     
     const movePiece = (e) =>{
@@ -117,6 +118,7 @@ function Chessboard() {
                 }
                 else if(valid){
                     console.log(currentPiece.type,gridX, gridY, x, y,currentPiece.team);
+                    const attackingPiece = pieces.find((p)=> p.x === gridX && p.y === gridY);
                     const updatedPieces = pieces.reduce((results, piece) =>{
                         //Changing the position of Active piece and pushing to results
                         if(piece.x === gridX  && piece.y === gridY){
@@ -130,12 +132,17 @@ function Chessboard() {
                             }
                             piece.x = x;
                             piece.y = y;
-                            
+
                             const promoteRow = (piece.team === "w") ? 7 : 0;
                             if(y === promoteRow && piece.type === "PAWN"){
                                 setPawnPromotionState(true);
                                 setPromotionPawn(piece);
                             }
+                            results.push(piece);
+                        }
+                        else if(piece.x === x && piece.y === y){
+                            piece.image = attackingPiece.image;
+                            piece.team = attackingPiece.team;
                             results.push(piece);
                         }
                         //pushing every piece except current and attacked piece
@@ -149,9 +156,11 @@ function Chessboard() {
                         return results;  
                     },[]);
                     setPieces(updatedPieces);
+                    
+
                     let chessboard_=clone(pieces);
-                    console.log(pieces);
-                    let updatedPosition = AI.get_ai_move(chessboard_,[])
+                    let updatedPosition = AI.get_ai_move(chessboard_,[]);
+                    const aiAttackingPiece = pieces.find(p => p.x === updatedPosition.xfrom && p.y === updatedPosition.yfrom)
                     const updatePieces = pieces.reduce((results, piece) =>{
                         //Changing the position of Active piece and pushing to results
                         if(piece.x === updatedPosition.xfrom  && piece.y === updatedPosition.yfrom){
@@ -159,10 +168,14 @@ function Chessboard() {
                             piece.y=updatedPosition.yto;
                             results.push(piece);
                         }
+                        else if(piece.x === updatedPosition.xto && piece.y === updatedPosition.yto){
+                            piece.image = aiAttackingPiece.image;
+                            piece.team = aiAttackingPiece.team;
+                            results.push(piece); 
+                        }
                         else if(!(piece.x === updatedPosition.xto && piece.y === updatedPosition.yto)){
                             results.push(piece);
                         }
-                        
                         return results;  
                     },[]);
                     setPieces(updatePieces);
@@ -176,7 +189,6 @@ function Chessboard() {
                 }
             }
             setActivePiece(null);
-            console.log(pieces)
         }
     }
     
