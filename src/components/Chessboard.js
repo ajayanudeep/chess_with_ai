@@ -141,6 +141,7 @@ function Chessboard() {
                             results.push(piece);
                         }
                         else if(piece.x === x && piece.y === y){
+                            piece.type = attackingPiece.type;
                             piece.image = attackingPiece.image;
                             piece.team = attackingPiece.team;
                             results.push(piece);
@@ -171,6 +172,7 @@ function Chessboard() {
                         else if(piece.x === updatedPosition.xto && piece.y === updatedPosition.yto){
                             piece.image = aiAttackingPiece.image;
                             piece.team = aiAttackingPiece.team;
+                            piece.type = aiAttackingPiece.type;
                             results.push(piece); 
                         }
                         else if(!(piece.x === updatedPosition.xto && piece.y === updatedPosition.yto)){
