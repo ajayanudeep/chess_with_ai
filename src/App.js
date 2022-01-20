@@ -6,12 +6,12 @@ import React from 'react';
 function App() {
   return (
     <div className="App">
-      {/* <BrowserRouter> */}
+      <BrowserRouter>
         <Route path="/"><Start /></Route> 
-        <Route path="/ActualGame"><Chessboard /></Route>
+        <Route path="/game"><Chessboard /></Route>
       {/* <Start></Start>
       <Chessboard /> */}
-      {/* </BrowserRouter> */}
+      </BrowserRouter>
     </div>
   );
 }
