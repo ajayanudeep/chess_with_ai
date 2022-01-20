@@ -329,8 +329,6 @@ function perform_move(chessboard,move) {
     var piece = chessboard.find( p => p.x === move.xfrom && p.y === move.yfrom);
     var new_chessboard=[];
     if(piece){
-        // console.log(chessboard);
-        const attacked_piece = chessboard.find((p) => p.x === move.xto && p.y === move.yto);
         piece.x = move.xto;
         piece.y = move.yto;
         new_chessboard = chessboard.map( (p) => {
@@ -356,7 +354,6 @@ function is_check(chessboard,color) {
         other_color="b";
     }
     for (const move in get_possible_moves(chessboard,other_color)) {
-        var copy = chessboard;
         perform_move(chessboard,move);
         var king_found = false;
         for (let i = 0; i < 8; i++) {
@@ -381,7 +378,6 @@ class AI{
         var best_move=0;
         var best_score=infinity;
         var copy=clone(chessboard);
-        var new_chessboard = [];
         get_possible_moves(copy,"b").forEach(moves => {
             moves.forEach(move => {
                 if(!is_invalid_move(move,invalid_moves)){

@@ -228,14 +228,8 @@ function Chessboard() {
             }
         }
         
-        // var pi={image:"icons/rook_w.png", x:0 , y:0, type:"ROOK", team:"w" };
-        // Chessboard.pieces.forEach(p => {
-            //     if(p)
-            //         console.log(p);
-            // });
-            // console.log(Chessboard.pieces);
     return (
-        <>
+        <>  
             {pawnPromotionState && <div id="pawn-promotion-modal" >
                 <div className="modal-body">
                     <img src={`/icons/rook_${promotionPawn.team}.png`} alt="" onClick={() => pawnPromotion("ROOK")}></img>
