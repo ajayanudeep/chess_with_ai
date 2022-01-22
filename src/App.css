@@ -82,24 +82,25 @@ body{
   align-items: center;
   background-image: url("chess.jpeg");
   height: 720px;
-  width: 1480px;
+  width: 1500px;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: red;
-  opacity: 1;
 }
-.Startup > .btn {
+.Startup > .link> .btn {
   font-size: medium;
   margin-top: 100px;
-  margin-left: 600px;
+  margin-left: 630px;
   height: 70px;
   width: 100px;
   border-radius: 5px;
   background-color: rgba(255,250,0,1);
 }
-.btn:hover{
+.Startup > .link > .btn:hover{
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+}
+.Startup > .link{
   text-decoration: none;
 }
 
@@ -109,7 +110,4 @@ body{
   margin-top: 50px;
   margin-left: 340px;
   color: rgba(255,255,255,1);
-}
-.Startup > .btn > .link{
-  text-decoration: none;
 }

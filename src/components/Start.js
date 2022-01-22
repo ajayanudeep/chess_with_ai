@@ -6,8 +6,8 @@ function Start() {
     return (
         <div className='Startup'> 
             <h1 className='Heading'>CHESS MASTER</h1>
-            <button className='btn'>
-                <Link to="/game" className='link'>Start Game</Link></button>
+            
+                <Link to="/game" className='link'><button className='btn'>Start Game</button></Link>
         </div>
     )
 }
