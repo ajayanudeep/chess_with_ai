@@ -87,13 +87,16 @@ body{
   background-position: center;
 }
 .Startup > .link> .btn {
-  font-size: medium;
-  margin-top: 100px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 25px;
+  margin-top: 150px;
   margin-left: 630px;
-  height: 70px;
-  width: 100px;
-  border-radius: 5px;
-  background-color: rgba(255,250,0,1);
+  height: 50px;
+  width: 200px;
+  color:black;
+  border-radius: 50px;
+  border: none;
+  background-color:rgba(243, 247, 30, 0.8);
 }
 .Startup > .link > .btn:hover{
   cursor: pointer;
